@@ -21,7 +21,7 @@ class TurbolinksSlide
         when 'index'
           return 1 if (@current.action != 'index')
           break
-        when 'new', 'edit'
+        when 'new', 'edit', 'show'
           return -1 if (@current.action == 'index')
           break
         else
