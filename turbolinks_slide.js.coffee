@@ -30,7 +30,11 @@ class TurbolinksSlide
   
   _domain_removed_current_url: ->
     port = if document.location.port == '' then '' else ":#{document.location.port}"
-    document.location.href.replace(document.location.protocol + '//' + document.location.host + port + '/', '')
+    url = document.location.href.replace(document.location.protocol + '//' + document.location.host + port + '/', '')
+    pos = url.indexOf('?')
+    if pos > 0
+      url = url.substring(0, pos)
+    url
   
   _get_controller: ->
     return @current_absolute_path[0] if @current_absolute_path.length >= 1
