@@ -1,12 +1,10 @@
 class TurbolinksSlide
   constructor: ->
-    @current_absolute_path = null
-    @current = {controller: null, action: null, param: null}
     @width = $(window).width()
-    @_set_params()
+    @event = null
   
-  animation_param: ->
-    @_set_params()
+  animation_param: (_event) ->
+    @event = _event
     switch (@_animation_type())
       when 1
         return { marginLeft: "-#{@width}px", marginRight: "#{@width}px", opacity: 0.3 }
@@ -16,50 +14,40 @@ class TurbolinksSlide
         return { opacity: 0 }
   
   _animation_type: ->
-    if (@previous.controller == @current.controller)
-      switch (@previous.action)
-        when 'index'
-          return 1 if (@current.action != 'index')
-          break
-        when 'new', 'edit', 'show'
-          return -1 if (@current.action == 'index')
-          break
-        else
-          break
-    return 0
-  
-  _domain_removed_current_url: ->
-    port = if document.location.port == '' then '' else ":#{document.location.port}"
-    url = document.location.href.replace(document.location.protocol + '//' + document.location.host + port + '/', '')
-    pos = url.indexOf('?')
-    if pos > 0
-      url = url.substring(0, pos)
-    url
-  
-  _get_controller: ->
-    return @current_absolute_path[0] if @current_absolute_path.length >= 1
-    return null
-  
-  _get_action: ->
-    return @current_absolute_path[2] if @current_absolute_path.length >= 3
-    if @current_absolute_path.length >= 2
-      return 'new' if @current_absolute_path[1] == 'new'
-    return 'index'
-  
-  _get_param: ->
-    return @current_absolute_path[1] if @current_absolute_path.length >= 2
-    return null
-  
-  _set_current: ->
-    @current = {controller: null, action: null, param: null}
-    @current.controller = @_get_controller()
-    @current.action = @_get_action()
-    @current.param = @_get_param()
-    @current.action = 'show' if @current.action == 'index' && @current.param
-  
-  _set_params: ->
-    @current_absolute_path = @_domain_removed_current_url().split('/')
-    @previous = @current if @current
-    @_set_current()
-  
+    curr_url = document.location.pathname
+    curr_query = document.location.search
+    next_url = @event.originalEvent.data.url.replace(document.location.origin, '')
+    next_query = ''
+    next_url_base = ''
+    pos = next_url.indexOf('?')
+    if pos >= 0
+      next_query = next_url.substring(pos, next_url.length)
+      next_url_base = next_url.substring(0, pos)
+
+    if next_query != ''
+      if curr_query != ''
+        if pos > 0
+          if (curr_url == next_url_base)
+            if (next_query > curr_query)
+              return 1
+            else if (curr_query > next_query)
+              return -1
+            else
+              return 0
+        curr_url += curr_query
+      else
+        if pos > 0
+          next_url = next_url_base
+    
+    return 0 if (curr_url == next_url)
+    
+    if (next_url.length > curr_url.length)
+      return 1 if (next_url.indexOf(curr_url) >= 0)
+      return 0
+    else if (curr_url.length > next_url.length)
+      return -1 if (curr_url.indexOf(next_url) >= 0)
+      return 0
+    else
+      return 0
+
 @TurbolinksSlide = TurbolinksSlide

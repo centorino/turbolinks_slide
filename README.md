@@ -8,6 +8,6 @@ usage
 ```
 turbolinks_slide = new TurbolinksSlide()
 
-$(document).on 'page:fetch', ->
-  $('#content').animate(turbolinks_slide.animation_param())
+$(document).on 'page:fetch', (event) ->
+  $('#content').animate(turbolinks_slide.animation_param(event), 250)
 ```
