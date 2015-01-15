@@ -1,4 +1,4 @@
-# turbolinks_slide
+# TurbolinksSlide
 
 Easily add a slide effect to Turbolinks page changes.
 
