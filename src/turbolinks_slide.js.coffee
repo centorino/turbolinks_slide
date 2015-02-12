@@ -43,6 +43,13 @@ class TurbolinksSlide
     next_full_url = next_full_url.split('?')
     @next_url = { path: next_full_url[0], query: (if (next_full_url.length > 1) then next_full_url[1] else '') }
 
+    cq = @curr_url.path.match(/\/[\-0-9]+/g)
+    nq = @next_url.path.match(/\/[\-0-9]+/g)
+    if (cq != '' && nq != '')
+      if (@curr_url.path.replace(cq, '') == @next_url.path.replace(nq, ''))
+        @curr_url = { path: @curr_url.path.replace(cq, ''), query: cq }
+        @next_url = { path: @next_url.path.replace(nq, ''), query: nq }
+
   _is_both_have_query_strings: ->
     return (@curr_url.query != '' && @next_url.query != '')
   

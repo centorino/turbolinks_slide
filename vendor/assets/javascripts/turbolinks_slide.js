@@ -68,17 +68,31 @@
     };
 
     TurbolinksSlide.prototype._set_url = function() {
-      var next_full_url;
+      var cq, next_full_url, nq;
       this.curr_url = {
         path: document.location.pathname,
         query: document.location.search.replace('?', '')
       };
       next_full_url = this.event.originalEvent.data.url.replace(document.location.origin, '');
       next_full_url = next_full_url.split('?');
-      return this.next_url = {
+      this.next_url = {
         path: next_full_url[0],
         query: (next_full_url.length > 1 ? next_full_url[1] : '')
       };
+      cq = this.curr_url.path.match(/\/[\-0-9]+/g);
+      nq = this.next_url.path.match(/\/[\-0-9]+/g);
+      if (cq !== '' && nq !== '') {
+        if (this.curr_url.path.replace(cq, '') === this.next_url.path.replace(nq, '')) {
+          this.curr_url = {
+            path: this.curr_url.path.replace(cq, ''),
+            query: cq
+          };
+          this.next_url = {
+            path: this.next_url.path.replace(nq, ''),
+            query: nq
+          };
+        }
+      }
     };
 
     TurbolinksSlide.prototype._is_both_have_query_strings = function() {
