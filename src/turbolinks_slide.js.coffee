@@ -45,10 +45,12 @@ class TurbolinksSlide
 
     cq = @curr_url.path.match(/\/[\-0-9]+/g)
     nq = @next_url.path.match(/\/[\-0-9]+/g)
-    if (cq != '' && nq != '')
-      if (@curr_url.path.replace(cq, '') == @next_url.path.replace(nq, ''))
-        @curr_url = { path: @curr_url.path.replace(cq, ''), query: cq }
-        @next_url = { path: @next_url.path.replace(nq, ''), query: nq }
+    if (cq == null || nq == null)
+      return
+    if (cq[0] != '' && nq[0] != '')
+      if (@curr_url.path.replace(cq[0], '') == @next_url.path.replace(nq[0], ''))
+        @curr_url = { path: @curr_url.path.replace(cq[0], ''), query: cq[0] }
+        @next_url = { path: @next_url.path.replace(nq[0], ''), query: nq[0] }
 
   _is_both_have_query_strings: ->
     return (@curr_url.query != '' && @next_url.query != '')
