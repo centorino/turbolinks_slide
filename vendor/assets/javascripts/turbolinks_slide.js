@@ -81,15 +81,16 @@
       };
       cq = this.curr_url.path.match(/\/[\-0-9]+/g);
       nq = this.next_url.path.match(/\/[\-0-9]+/g);
-      if (cq !== '' && nq !== '') {
-        if (this.curr_url.path.replace(cq, '') === this.next_url.path.replace(nq, '')) {
+      if (cq === null || nq === null) return;
+      if (cq[0] !== '' && nq[0] !== '') {
+        if (this.curr_url.path.replace(cq[0], '') === this.next_url.path.replace(nq[0], '')) {
           this.curr_url = {
-            path: this.curr_url.path.replace(cq, ''),
-            query: cq
+            path: this.curr_url.path.replace(cq[0], ''),
+            query: cq[0]
           };
           this.next_url = {
-            path: this.next_url.path.replace(nq, ''),
-            query: nq
+            path: this.next_url.path.replace(nq[0], ''),
+            query: nq[0]
           };
         }
       }
